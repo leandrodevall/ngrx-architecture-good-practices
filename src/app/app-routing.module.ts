@@ -21,13 +21,6 @@ const appRoutes: Routes = [
             (m) => m.ProductModule
           ),
       },
-      {
-        path: 'templates',
-        loadChildren: () =>
-          import('./feature-modules/templates/templates.module').then(
-            (m) => m.TemplatesModule
-          ),
-      },
       { path: '', redirectTo: 'welcome', pathMatch: 'full' },
     ],
   },

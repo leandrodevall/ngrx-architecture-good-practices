@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { Product } from '../product';
 import * as ProductActions from './product.action';
+import { ProductApiActions, ProductPageActions } from './actions';
 
 export interface ProductState {
   showProductCode: boolean;
@@ -18,39 +19,45 @@ const initialState: ProductState = {
 
 export const productReducer = createReducer<ProductState>(
   initialState,
-  on(ProductActions.toggleProductCode, (state): ProductState => {
+  on(ProductPageActions.toggleProductCode, (state): ProductState => {
     return {
       ...state,
       showProductCode: !state.showProductCode,
     };
   }),
-  on(ProductActions.setCurrentProduct, (state, action): ProductState => {
-    return { ...state, currentProductId: action.currentProductId };
+  on(ProductPageActions.setCurrentProduct, (state, action): ProductState => {
+    return {
+      ...state,
+      currentProductId: action.currentProductId,
+    };
   }),
-  on(ProductActions.clearCurrentProduct, (state): ProductState => {
-    return { ...state, currentProductId: null };
+  on(ProductPageActions.clearCurrentProduct, (state): ProductState => {
+    return {
+      ...state,
+      currentProductId: null,
+    };
   }),
-  on(ProductActions.initializeCurrentProduct, (state): ProductState => {
+  on(ProductPageActions.initializeCurrentProduct, (state): ProductState => {
     return {
       ...state,
       currentProductId: 0,
     };
   }),
-  on(ProductActions.loadProductSuccess, (state, action): ProductState => {
+  on(ProductApiActions.loadProductsSuccess, (state, action): ProductState => {
     return {
       ...state,
-      products: action.produtcs,
+      products: action.products,
       error: '',
     };
   }),
-  on(ProductActions.loadProductFailure, (state, action): ProductState => {
+  on(ProductApiActions.loadProductsFailure, (state, action): ProductState => {
     return {
       ...state,
       products: [],
       error: action.error,
     };
   }),
-  on(ProductActions.updateProductSuccess, (state, action): ProductState => {
+  on(ProductApiActions.updateProductSuccess, (state, action): ProductState => {
     const updatedProducts = state.products.map((item) =>
       action.product.id === item.id ? action.product : item
     );
@@ -61,7 +68,37 @@ export const productReducer = createReducer<ProductState>(
       error: '',
     };
   }),
-  on(ProductActions.updateProductFailure, (state, action): ProductState => {
+  on(ProductApiActions.updateProductFailure, (state, action): ProductState => {
+    return {
+      ...state,
+      error: action.error,
+    };
+  }),
+  on(ProductApiActions.createProductSuccess, (state, action): ProductState => {
+    return {
+      ...state,
+      products: [...state.products, action.product],
+      currentProductId: action.product.id,
+      error: '',
+    };
+  }),
+  on(ProductApiActions.createProductFailure, (state, action): ProductState => {
+    return {
+      ...state,
+      error: action.error,
+    };
+  }),
+  on(ProductApiActions.deleteProductSuccess, (state, action): ProductState => {
+    return {
+      ...state,
+      products: state.products.filter(
+        (product) => product.id !== action.productId
+      ),
+      currentProductId: null,
+      error: '',
+    };
+  }),
+  on(ProductApiActions.deleteProductFailure, (state, action): ProductState => {
     return {
       ...state,
       error: action.error,
