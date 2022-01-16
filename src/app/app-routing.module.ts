@@ -3,28 +3,30 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from './feature-modules/user/auth-guard.service';
 
-import { ShellComponent } from './home/shell.component';
 import { WelcomeComponent } from './home/welcome.component';
 import { PageNotFoundComponent } from './home/page-not-found.component';
 
 const appRoutes: Routes = [
+  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   {
-    path: '',
-    component: ShellComponent,
-    children: [
-      { path: 'welcome', component: WelcomeComponent },
-      {
-        path: 'products',
-        // canActivate: [AuthGuard],
-        loadChildren: () =>
-          import('./feature-modules/products/product.module').then(
-            (m) => m.ProductModule
-          ),
-      },
-      { path: '', redirectTo: 'welcome', pathMatch: 'full' },
-    ],
+    path: 'welcome',
+    component: WelcomeComponent,
+    data: { title: 'Welcome - Product Management' },
   },
-  { path: '**', component: PageNotFoundComponent },
+  {
+    path: 'products',
+    // canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./feature-modules/products/product.module').then(
+        (m) => m.ProductModule
+      ),
+    data: { title: 'Products - Product Management' },
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent,
+    data: { title: 'Page Not Found' },
+  },
 ];
 
 @NgModule({

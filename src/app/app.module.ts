@@ -9,8 +9,6 @@ import { ProductData } from './feature-modules/products/product-data';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { ShellComponent } from './home/shell.component';
-import { MenuComponent } from './home/menu.component';
 import { WelcomeComponent } from './home/welcome.component';
 import { PageNotFoundComponent } from './home/page-not-found.component';
 
@@ -20,6 +18,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   imports: [
@@ -28,6 +27,7 @@ import { EffectsModule } from '@ngrx/effects';
     HttpClientInMemoryWebApiModule.forRoot(ProductData),
     UserModule,
     AppRoutingModule,
+    CoreModule,
     StoreModule.forRoot({}, {}),
     StoreDevtoolsModule.instrument({
       name: 'APP DEMO App DEVtols',
@@ -36,13 +36,7 @@ import { EffectsModule } from '@ngrx/effects';
     }),
     EffectsModule.forRoot([]),
   ],
-  declarations: [
-    AppComponent,
-    ShellComponent,
-    MenuComponent,
-    WelcomeComponent,
-    PageNotFoundComponent,
-  ],
+  declarations: [AppComponent, WelcomeComponent, PageNotFoundComponent],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
